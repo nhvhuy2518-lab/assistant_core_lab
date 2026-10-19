@@ -1,0 +1,27 @@
+[
+  {
+    "id": "H26-1.1",
+    "title": "Graduation Requirements",
+    "text": "Students must complete at least 135 credits with a minimum GPA of 2.0 to graduate."
+  },
+  {
+    "id": "H26-2.3",
+    "title": "Late Registration",
+    "text": "Course registration after the official deadline incurs a late fee and requires Dean approval."
+  },
+  {
+    "id": "H26-3.1",
+    "title": "Exam Absence",
+    "text": "Absence from final exams must be reported within 48 hours with medical or official evidence."
+  },
+  {
+    "id": "H26-4.2",
+    "title": "Internship Prerequisites",
+    "text": "Students must have completed 90 credits before registering for the graduation internship."
+  },
+  {
+    "id": "H26-5.3",
+    "title": "Thesis Registration Credits",
+    "text": "Thesis registration requires a minimum of 110 accumulated credits and thesis advisor approval."
+  }
+]
