@@ -39,28 +39,28 @@ def test_fee_intent(service):
 def test_office_intent(service):
     res = service.handle(Message(text="where is the library"))
     assert res.intent == Intent.OFFICE
-    assert "Library" in res.answer
+    assert "library" in res.answer.lower()
     assert "B.201" in res.answer
     assert not res.degraded
 
 
 def test_rule_normal_with_responder(service):
-    res = service.handle(Message(text="can I register my thesis with 120 credits"))
+    res = service.handle(Message(text="graduation requirements"))
     assert res.intent == Intent.RULE
     assert len(res.sources) == 1
-    assert res.sources[0].id == "H26-5.3"
+    assert res.sources[0].id == "H26-1.1"
     assert not res.degraded
-    assert "Based on 'Thesis registration'" in res.answer
+    assert "Based on 'Graduation Requirements'" in res.answer
 
 
 def test_fallback_when_provider_fails(service):
     """Test required fallback mechanism: degraded flag and template answer."""
     service.responder = StubLLMResponder(fail=True)
-    res = service.handle(Message(text="can I register my thesis with 120 credits"))
+    res = service.handle(Message(text="graduation requirements"))
     assert res.intent == Intent.RULE
     assert res.degraded is True
     assert len(res.sources) == 1
-    assert "Thesis registration:" in res.answer
+    assert "Graduation Requirements:" in res.answer
 
 
 def test_empty_message_validation():

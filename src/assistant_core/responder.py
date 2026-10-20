@@ -3,7 +3,7 @@
 from typing import Protocol
 
 from assistant_core.errors import ProviderError
-from assistant_core.models import Rule
+from assistant_core.knowledge import Rule
 
 
 class Responder(Protocol):

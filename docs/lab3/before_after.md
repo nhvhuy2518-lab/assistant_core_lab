@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Lab 3 — Before / after maintainability comparison
 
 Fill in for the monolith (before) and your refactored package (after).
@@ -17,3 +18,17 @@ Fill in for the monolith (before) and your refactored package (after).
 
 **Three sentences:**
 The codebase improved most by decoupling the LLM provider behind a typed `Responder` Protocol and extracting config to `.env`, allowing reliable offline testing. Complexity slightly increased with multiple files and Pydantic boilerplate, but this overhead pays off through contract enforcement and separation of concerns. In the future, I would still introduce a vector-based semantic search to replace the simple keyword-matching in `knowledge.py`.
+=======
+# Before and After Maintainability Worksheet
+
+| Question | Monolith | assistant_core |
+| :--- | :--- | :--- |
+| Places to change the credit rate | 1 constant in code | 1 variable in .env |
+| Tests run offline and deterministically? | no | yes |
+| Missing handbook.json | prints and continues silently | DataError at startup |
+| Secret printed or logged? | yes | no |
+| Module-level globals | 9 (3 mutable) | 0 |
+| Bare except: | 3 | 0 |
+| Longest function (lines) | ~65 (handle) | ~15 |
+| Swap the LLM without touching the service? | no | yes |
+>>>>>>> 5cbac270e0de8455ec9315840eca778166c3c723
