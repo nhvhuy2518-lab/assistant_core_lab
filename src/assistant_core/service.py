@@ -1,4 +1,5 @@
 import logging
+
 from assistant_core.errors import ProviderError
 from assistant_core.models import Intent, Message, Response, Source
 from assistant_core.responder import Responder, TemplateResponder
