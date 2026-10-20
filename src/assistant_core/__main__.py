@@ -1,6 +1,7 @@
+import logging
 import sys
 import time
-import logging
+
 from assistant_core.config import load_settings
 from assistant_core.knowledge import Handbook, OfficeDirectory
 from assistant_core.logging_setup import setup_logging
