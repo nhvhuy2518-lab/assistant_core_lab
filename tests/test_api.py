@@ -86,7 +86,10 @@ def test_weather_stale_cache_when_upstream_fails():
 def test_offices_ok(client):
     r = client.get("/v1/offices")
     assert r.status_code == 200
-    assert isinstance(r.json(), list)
+    data = r.json()
+    assert isinstance(data, list)
+    names = [o["name"] for o in data]
+    assert names == sorted(names)
 
 
 def test_offices_contains_library(client):
