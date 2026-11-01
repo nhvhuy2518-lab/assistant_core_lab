@@ -64,11 +64,11 @@ def create_app(
         responses={422: {"model": ErrorResponse}, 429: {"model": ErrorResponse}},
     )
     def chat(req: ChatRequest, request: Request) -> ChatResponse:
-        client = request.client.host if request.client else "unknown"
-        if not limiter.allow(client):
-            raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, "Too many requests")
-        resp = service.handle(Message(text=req.message, session_id=req.session_id))
-        return ChatResponse(**resp.model_dump(), request_id=uuid.uuid4().hex[:12])
+        # BONUS: rate limiting (see tutorial Part F). Leave it for later.
+        # TODO T1 (2 lines):
+        #   1. resp = service.handle(Message(text=req.message, session_id=req.session_id))
+        #   2. return ChatResponse(**resp.model_dump(), request_id=uuid.uuid4().hex[:12])
+        raise NotImplementedError("T1")
 
     @app.post("/v1/feedback", response_model=FeedbackOut, status_code=201, tags=["feedback"])
     def add_feedback(fb: FeedbackIn) -> FeedbackOut:
@@ -82,13 +82,9 @@ def create_app(
 
     @app.get("/v1/weather", response_model=Weather, tags=["external"], responses={503: {"model": ErrorResponse}})
     def campus_weather() -> Weather:
-        try:
-            return weather.current()
-        except ExternalServiceError:
-            raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "Weather service unavailable") from None
-
-    @app.get("/v1/offices", tags=["knowledge"])
-    def list_offices() -> list[dict]:
-        return [o.__dict__ for o in service.offices.all()]
+        # TODO T4 (4 lines): call weather.current() inside try/except.
+        #   If ExternalServiceError happens, raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE,
+        #   "Weather service unavailable") from None
+        raise NotImplementedError("T4")
 
     return app
