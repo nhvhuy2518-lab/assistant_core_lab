@@ -1,5 +1,4 @@
-"""Run: pytest -q test_hello_api.py   — all green means P1–P5 are done."""
-
+"""Run: pytest -q test_hello_api.py — all green means P1-P5 are done."""
 from fastapi.testclient import TestClient
 from hello_api import app
 
