@@ -1,4 +1,3 @@
-
 """Persistence with SQLModel (SQLAlchemy + Pydantic) — Lab 5.
 
 The models and record_interaction are provided as worked examples.
@@ -36,9 +35,7 @@ class ChatSession(SQLModel, table=True):
     channel: str = Field(default="web", max_length=16)
     created_at: datetime = Field(default_factory=utcnow)
 
-    interactions: list["Interaction"] = Relationship(
-        back_populates="session"
-    )
+    interactions: list["Interaction"] = Relationship(back_populates="session")
 
 
 class Interaction(SQLModel, table=True):
@@ -71,13 +68,9 @@ class Interaction(SQLModel, table=True):
         index=True,
     )
 
-    session: Optional["ChatSession"] = Relationship(
-        back_populates="interactions"
-    )
+    session: Optional["ChatSession"] = Relationship(back_populates="interactions")
 
-    feedback: list["Feedback"] = Relationship(
-        back_populates="interaction"
-    )
+    feedback: list["Feedback"] = Relationship(back_populates="interaction")
 
 
 class Feedback(SQLModel, table=True):
@@ -97,9 +90,7 @@ class Feedback(SQLModel, table=True):
 
     created_at: datetime = Field(default_factory=utcnow)
 
-    interaction: Optional["Interaction"] = Relationship(
-        back_populates="feedback"
-    )
+    interaction: Optional["Interaction"] = Relationship(back_populates="feedback")
 
 
 def make_engine(url: str):
@@ -110,11 +101,7 @@ def make_engine(url: str):
             poolclass=StaticPool,
         )
 
-    connect_args = (
-        {"check_same_thread": False}
-        if url.startswith("sqlite")
-        else {}
-    )
+    connect_args = {"check_same_thread": False} if url.startswith("sqlite") else {}
 
     return create_engine(url, connect_args=connect_args)
 
@@ -124,9 +111,7 @@ def init_db(engine) -> None:
 
 
 def hash_session(raw: str, salt: str) -> str:
-    return hashlib.sha256(
-        (salt + raw).encode()
-    ).hexdigest()[:16]
+    return hashlib.sha256((salt + raw).encode()).hexdigest()[:16]
 
 
 class Repository:
@@ -183,12 +168,7 @@ class Repository:
     ) -> Feedback | None:
 
         with Session(self.engine) as db:
-
-            exists = db.exec(
-                select(Interaction).where(
-                    Interaction.request_id == request_id
-                )
-            ).first()
+            exists = db.exec(select(Interaction).where(Interaction.request_id == request_id)).first()
 
             if exists is None:
                 return None
@@ -215,13 +195,7 @@ class Repository:
     ) -> list[Feedback]:
 
         with Session(self.engine) as db:
-            return list(
-                db.exec(
-                    select(Feedback)
-                    .order_by(Feedback.created_at.desc())
-                    .limit(limit)
-                )
-            )
+            return list(db.exec(select(Feedback).order_by(Feedback.created_at.desc()).limit(limit)))
 
     # =====================================================
     # Intent statistics
@@ -231,7 +205,6 @@ class Repository:
         """Requests, average latency and unresolved rate per intent."""
 
         with Session(self.engine) as db:
-
             unresolved = func.sum(
                 case(
                     (Interaction.resolved.is_(False), 1),
