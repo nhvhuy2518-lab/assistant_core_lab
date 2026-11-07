@@ -135,7 +135,6 @@ class Repository:
         degraded: bool,
         latency_ms: float,
     ) -> None:
-
         sid = hash_session(raw_session, self.salt)
 
         with Session(self.engine) as db:
@@ -166,7 +165,6 @@ class Repository:
         rating: int,
         comment: str | None,
     ) -> Feedback | None:
-
         with Session(self.engine) as db:
             exists = db.exec(select(Interaction).where(Interaction.request_id == request_id)).first()
 
@@ -193,7 +191,6 @@ class Repository:
         self,
         limit: int = 100,
     ) -> list[Feedback]:
-
         with Session(self.engine) as db:
             return list(db.exec(select(Feedback).order_by(Feedback.created_at.desc()).limit(limit)))
 
