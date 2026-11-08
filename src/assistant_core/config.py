@@ -20,6 +20,8 @@ class Settings(BaseModel):
     retake_multiplier: float = 1.5
     max_credits: int = 30
     log_level: str = "INFO"
+    session_salt: str = "dev-only-change-me"
+    database_url: str = "sqlite:///./assistant.db"
     # Lab 4 — API
     api_admin_key: str | None = Field(default=None, repr=False)
     weather_url: str = "https://api.open-meteo.com/v1/forecast"
