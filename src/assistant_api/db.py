@@ -179,7 +179,7 @@ class Repository:
         limit: int = 100,
     ) -> list[Feedback]:
         with Session(self.engine) as db:
-            return list(db.exec(select(Feedback).order_by(Feedback.created_at.desc()).limit(limit)))
+            return list(db.exec(select(Feedback).order_by(Feedback.created_at.desc()).limit(limit)).all())
 
     # =====================================================
     # Intent statistics
