@@ -15,11 +15,18 @@ dev = ["pytest>=8", "ruff>=0.6"]
 where = ["src"]
 
 [tool.pytest.ini_options]
+norecursedirs = [".git", ".venv", "lab04"]
 pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 120
 target-version = "py310"
+exclude = [
+    ".git",
+    ".venv",
+    "lab04",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "BLE"]
+
