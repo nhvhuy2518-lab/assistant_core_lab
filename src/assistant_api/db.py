@@ -159,30 +159,16 @@ class Repository:
     # R1 - Save feedback
     # =====================================================
 
-    def add_feedback(
-        self,
-        request_id: str,
-        rating: int,
-        comment: str | None,
-    ) -> Feedback | None:
+    def add_feedback(self, request_id: str, rating: int, comment: str | None) -> Feedback | None:
         with Session(self.engine) as db:
             exists = db.exec(select(Interaction).where(Interaction.request_id == request_id)).first()
-
             if exists is None:
-                return None
-
-            fb = Feedback(
-                request_id=request_id,
-                rating=rating,
-                comment=comment,
-            )
-
+                return None 
+            fb = Feedback(request_id=request_id, rating=rating, comment=comment)
             db.add(fb)
             db.commit()
-            db.refresh(fb)
-
+            db.refresh(fb)  
             return fb
-
     # =====================================================
     # R2 - List feedback, newest first
     # =====================================================
