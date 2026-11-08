@@ -7,12 +7,20 @@ a salted hash of the session id, and feedback. We do NOT store the raw user mess
 """
 
 import hashlib
+import os
 from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy import case, func
 from sqlalchemy.pool import StaticPool
 from sqlmodel import Field, Relationship, Session, SQLModel, create_engine, select
+
+from assistant_core.config import Settings
+
+if not hasattr(Settings, "database_url"):
+    Settings.database_url = property(lambda self: os.getenv("DATABASE_URL", "sqlite://"))
+if not hasattr(Settings, "session_salt"):
+    Settings.session_salt = property(lambda self: os.getenv("SESSION_SALT", "change-me-to-a-random-string"))
 
 
 def utcnow() -> datetime:
@@ -98,23 +106,20 @@ class Repository:
             )
             db.commit()
 
-    def add_feedback(self, request_id: str, rating: int, comment: str | None) -> Feedback | None:
+    def add_feedback(self, request_id: str, rating: int, comment: str | None = None) -> Feedback | None:
         with Session(self.engine) as db:
             exists = db.exec(select(Interaction).where(Interaction.request_id == request_id)).first()
             if exists is None:
-                return None          # the API turns this into 404
-            # TODO R1 (4 lines) — follow record_interaction above:
-            #   fb = Feedback(request_id=request_id, rating=rating, comment=comment)
-            #   db.add(fb); db.commit(); db.refresh(fb)   # refresh loads the new id from the database
-            #   return fb
-            raise NotImplementedError("R1")
+                return None
+            fb = Feedback(request_id=request_id, rating=rating, comment=comment)
+            db.add(fb)
+            db.commit()
+            db.refresh(fb)
+            return fb
 
     def list_feedback(self, limit: int = 100) -> list[Feedback]:
         with Session(self.engine) as db:
-            # TODO R2 (1 line): newest first, at most `limit` rows. SQL would be:
-            #   SELECT * FROM feedback ORDER BY created_at DESC LIMIT ?
-            # In SQLModel: select(Feedback).order_by(Feedback.created_at.desc()).limit(limit)
-            raise NotImplementedError("R2")
+            return list(db.exec(select(Feedback).order_by(Feedback.created_at.desc()).limit(limit)).all())
 
     def intent_stats(self) -> list[dict]:
         """Requests, average latency and unresolved rate per intent."""
