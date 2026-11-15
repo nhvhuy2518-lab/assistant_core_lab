@@ -2,6 +2,7 @@
 
 No AI here — just dictionaries, sets and sorting (DSA!). Run the tests:  pytest -q test_mini_search.py
 """
+
 import re
 
 DOCS = {
@@ -10,7 +11,26 @@ DOCS = {
     "D3": "A lost student card can be replaced at Student Affairs in room I.102.",
     "D4": "Students may borrow up to 5 books from the library for 14 days.",
 }
-STOP = {"a", "an", "the", "at", "of", "for", "to", "in", "can", "be", "is", "my", "i", "may", "with", "and", "up", "from"}
+STOP = {
+    "a",
+    "an",
+    "the",
+    "at",
+    "of",
+    "for",
+    "to",
+    "in",
+    "can",
+    "be",
+    "is",
+    "my",
+    "i",
+    "may",
+    "with",
+    "and",
+    "up",
+    "from",
+}
 
 
 def tokenize(text: str) -> list[str]:
@@ -18,31 +38,23 @@ def tokenize(text: str) -> list[str]:
     return [w for w in re.findall(r"\w+", text.lower()) if w not in STOP]
 
 
-
 def build_index(docs: dict[str, str]) -> dict[str, set[str]]:
+    """Inverted index: word -> set of document ids that contain it.
+
+    Example: {"thesis": {"D1"}, "credits": {"D1", "D2"}, ...}
+    """
     index: dict[str, set[str]] = {}
-
-    # S1: Build the inverted index
-    for doc_id, content in docs.items():
-        for word in tokenize(content):
+    for doc_id, text in docs.items():
+        for word in tokenize(text):
             index.setdefault(word, set()).add(doc_id)
-
     return index
 
 
 def search(index: dict[str, set[str]], query: str, k: int = 2) -> list[tuple[str, int]]:
+    """Score = number of query words found in the document. Return the top k (doc_id, score),
+    highest score first; ties broken by doc_id. Documents with score 0 are not returned."""
     scores: dict[str, int] = {}
-
-    # S2: Calculate document scores
     for word in tokenize(query):
         for doc_id in index.get(word, set()):
             scores[doc_id] = scores.get(doc_id, 0) + 1
-
-    # S3: Rank documents by score
-    ranked = sorted(
-        scores.items(),
-        key=lambda item: (-item[1], item[0])
-    )
-
-    return ranked[:k]
-
+    return sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))[:k]
