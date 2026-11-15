@@ -23,3 +23,8 @@
 {"id": "E23", "question": "what to do if absent from final exam for medical reasons", "expect_source": "H26#7.2", "category": "normal"}
 {"id": "E24", "question": "what is the minimum IELTS score for the master degree exchange scholarship in Japan", "expect_abstain": true, "category": "out-of-scope"}
 {"id": "E25", "question": "can the university approve a remote internship salary of 5000 USD", "expect_abstain": true, "category": "out-of-scope"}
+{"id": "E61", "question": "how do I get back into my school account if I forgot the login", "expect_source": "S26#2", "category": "paraphrase"}
+{"id": "E62", "question": "can I get my money back if I drop out", "expect_source": "F26#4", "category": "paraphrase"}
+{"id": "E63", "question": "can I pause my studies for one semester", "expect_source": "H26#8.1", "category": "paraphrase"}
+{"id": "E64", "question": "what is the best programming language to learn first", "expect_abstain": true, "category": "out-of-scope"}
+{"id": "E65", "question": "can you suggest a good place to eat near campus", "expect_abstain": true, "category": "out-of-scope"}
