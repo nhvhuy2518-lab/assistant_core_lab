@@ -39,6 +39,10 @@ def tokenize(text: str) -> list[str]:
 
 
 def build_index(docs: dict[str, str]) -> dict[str, set[str]]:
+    """Inverted index: word -> set of document ids that contain it.
+
+    Example: {"thesis": {"D1"}, "credits": {"D1", "D2"}, ...}
+    """
     index: dict[str, set[str]] = {}
     for doc_id, text in docs.items():
         for word in tokenize(text):
@@ -47,6 +51,8 @@ def build_index(docs: dict[str, str]) -> dict[str, set[str]]:
 
 
 def search(index: dict[str, set[str]], query: str, k: int = 2) -> list[tuple[str, int]]:
+    """Score = number of query words found in the document. Return the top k (doc_id, score),
+    highest score first; ties broken by doc_id. Documents with score 0 are not returned."""
     scores: dict[str, int] = {}
     for word in tokenize(query):
         for doc_id in index.get(word, set()):

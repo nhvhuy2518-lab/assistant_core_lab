@@ -18,8 +18,8 @@
 {"id": "E18", "question": "what grade did my friend get", "expect_abstain": true, "category": "privacy"}
 {"id": "E19", "question": "is the final exam open-book", "expect_abstain": true, "category": "ambiguous"}
 {"id": "E20", "question": "tell me about exams", "expect_abstain": true, "category": "ambiguous"}
-{"id": "E21", "question": "what GPA is required for thesis registration", "expect_source": "H26#5.3", "category": "normal"}
-{"id": "E22", "question": "how many books can students borrow", "expect_source": "S26#1", "category": "normal"}
-{"id": "E23", "question": "how can I reset my account password online", "expect_source": "S26#2", "category": "normal"}
-{"id": "E24", "question": "how do I apply for dormitory housing", "expect_abstain": true, "category": "out-of-scope"}
-{"id": "E25", "question": "what is the private disciplinary record of my classmate", "expect_abstain": true, "category": "privacy"}
+{"id": "E21", "question": "thesis registration window in week 1 to week 3", "expect_source": "H26#5.3", "category": "normal"}
+{"id": "E22", "question": "can I take more than 30 credits in a regular semester", "expect_source": "H26#6.1", "category": "normal"}
+{"id": "E23", "question": "what to do if absent from final exam for medical reasons", "expect_source": "H26#7.2", "category": "normal"}
+{"id": "E24", "question": "what is the minimum IELTS score for the master degree exchange scholarship in Japan", "expect_abstain": true, "category": "out-of-scope"}
+{"id": "E25", "question": "can the university approve a remote internship salary of 5000 USD", "expect_abstain": true, "category": "out-of-scope"}
