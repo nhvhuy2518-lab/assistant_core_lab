@@ -46,3 +46,4 @@ Asking a standalone AI model about university rules is like giving a student a *
 Before calling the AI, our code checks whether the best search score meets the minimum threshold (`score >= 2.0`), immediately saying *"I don't know"* (`abstain`) if no reliable paragraph is found.
 We then hand only those retrieved paragraphs to the model and require it to return a structured JSON response containing both the answer and the cited `source_ids`.
 Crucially, **our Python code—not the model—performs the grounding check (`set(draft.source_ids) <= allowed_ids`)**, verifying that every cited section was actually retrieved and falling back to a direct quote if the AI invents a fake citation.
+
