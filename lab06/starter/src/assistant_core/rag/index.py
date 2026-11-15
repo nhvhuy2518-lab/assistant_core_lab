@@ -53,7 +53,7 @@ class Index(Protocol):
 
 
 class BM25Index:
-    def __init__(self, chunks: lislisa[Chunk], k1: float = 1.5, b: float = 0.75):
+    def __init__(self, chunks: list[Chunk], k1: float = 1.5, b: float = 0.75):
         self.chunks, self.k1, self.b = chunks, k1, b
         self.docs = [tokenize(c.title + " " + c.text) for c in chunks]
         self.avgdl = sum(map(len, self.docs)) / max(len(self.docs), 1)

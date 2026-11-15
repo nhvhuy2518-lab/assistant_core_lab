@@ -9,7 +9,7 @@ from collections.abc import Callable
 from assistant_core.errors import InvalidRequest, ProviderError
 from assistant_core.llm import LLM, AnswerDraft, build_prompt, parse_draft
 from assistant_core.models import Intent, Response, Source
-from assistant_core.rag.index import Index, tokenize, QUERY_SYNONYMS
+from assistant_core.rag.index import QUERY_SYNONYMS, Index, tokenize
 
 log = logging.getLogger("assistant_core.rag")
 
