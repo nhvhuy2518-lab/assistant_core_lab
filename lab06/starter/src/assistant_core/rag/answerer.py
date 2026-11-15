@@ -1,4 +1,3 @@
-
 """Answer policy questions with retrieval + LLM, safely."""
 
 from __future__ import annotations
@@ -38,18 +37,13 @@ class RagAnswerer:
         self.retries = retries
         self.tool_runner = tool_runner
 
-    def _has_sufficient_coverage(
-        self, question: str, source_text: str
-    ) -> bool:
+    def _has_sufficient_coverage(self, question: str, source_text: str) -> bool:
         """Check lexical coverage of the retrieved source."""
 
         query_tokens = tokenize(question)
 
         query_terms = {
-            synonym
-            for token in query_tokens
-            for synonym in QUERY_SYNONYMS.get(token, (token,))
-            if not token.isdigit()
+            synonym for token in query_tokens for synonym in QUERY_SYNONYMS.get(token, (token,)) if not token.isdigit()
         }
 
         source_terms = set(tokenize(source_text))
@@ -87,9 +81,7 @@ class RagAnswerer:
         if self.llm is None:
             source_text = top.title + " " + top.text
 
-            if not self._has_sufficient_coverage(
-                question, source_text
-            ):
+            if not self._has_sufficient_coverage(question, source_text):
                 return Response(
                     answer=ESCALATE_MSG,
                     intent=Intent.UNKNOWN,
@@ -106,9 +98,7 @@ class RagAnswerer:
                 confidence=None,
             )
 
-        prompt = build_prompt(
-            question, hits, self.prompt_version
-        )
+        prompt = build_prompt(question, hits, self.prompt_version)
 
         for attempt in range(self.retries + 1):
             try:
@@ -134,9 +124,7 @@ class RagAnswerer:
 
                 source_text = top.title + " " + top.text
 
-                if not self._has_sufficient_coverage(
-                    question, source_text
-                ):
+                if not self._has_sufficient_coverage(question, source_text):
                     return Response(
                         answer=ESCALATE_MSG,
                         intent=Intent.UNKNOWN,
@@ -145,9 +133,7 @@ class RagAnswerer:
                         confidence=0.0,
                     )
 
-                draft: AnswerDraft = parse_draft(
-                    raw, set(sources)
-                )
+                draft: AnswerDraft = parse_draft(raw, set(sources))
 
                 if draft.abstain:
                     return Response(
@@ -163,10 +149,7 @@ class RagAnswerer:
                     intent=Intent.RULE,
                     path="llm",
                     confidence=draft.confidence,
-                    sources=[
-                        sources[source_id]
-                        for source_id in draft.source_ids
-                    ],
+                    sources=[sources[source_id] for source_id in draft.source_ids],
                 )
 
             except ProviderError as exc:

@@ -33,6 +33,7 @@ QUERY_SYNONYMS = {
     "long": ("days",),
 }
 
+
 def tokenize(text: str) -> list[str]:
     tokens = [t for t in re.findall(r"\w+", text.lower()) if t not in STOP]
     # Apply query synonyms
@@ -65,11 +66,7 @@ class BM25Index:
     def search(self, query: str, k: int = 3) -> list[Hit]:
         raw_tokens = re.findall(r"\w+", query.lower())
         q = tokenize(query)
-        q.extend(
-            synonym
-            for token in raw_tokens
-            for synonym in QUERY_SYNONYMS.get(token, ())
-        )       
+        q.extend(synonym for token in raw_tokens for synonym in QUERY_SYNONYMS.get(token, ()))
         scores = []
         for i, tf in enumerate(self.tf):
             dl = len(self.docs[i])

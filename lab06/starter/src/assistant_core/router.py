@@ -1,4 +1,3 @@
-
 """Decide which capability handles a message. Rules first — no AI needed."""
 
 from __future__ import annotations
@@ -14,7 +13,7 @@ OFFICE_WORDS = ("where", "location", "address", "room", "office")
 
 def route(text: str, office_names: set[str]) -> Intent:
     t = text.lower().strip().rstrip("?!.")
-    
+
     if t in GREETINGS:
         return Intent.GREETING
 

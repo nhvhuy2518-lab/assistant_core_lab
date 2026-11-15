@@ -1,4 +1,3 @@
-
 """LLM integration behind one interface (adapter pattern).
 
 Providers:
