@@ -1,3 +1,4 @@
+
 """LLM integration behind one interface (adapter pattern).
 
 Providers:
@@ -54,8 +55,11 @@ def parse_draft(raw: str, allowed_ids: set[str]) -> AnswerDraft:
         draft = AnswerDraft.model_validate(json.loads(m.group(0)))
     except (json.JSONDecodeError, ValidationError) as exc:
         raise ProviderError(f"invalid structured output: {type(exc).__name__}") from exc
+
+    # A2: Reject answers that do not cite sources or cite sources not retrieved.
     if not draft.abstain and (not draft.source_ids or not set(draft.source_ids) <= allowed_ids):
         raise ProviderError("answer cites sources that were not retrieved")
+
     return draft
 
 

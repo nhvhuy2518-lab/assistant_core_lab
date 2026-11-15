@@ -19,12 +19,27 @@ from typing import Protocol
 from assistant_core.rag.chunker import Chunk
 
 STOP = frozenset(
-    "a an and are at be by can do for from how i in is it my of on or the to what when where who with".split()
+    "a an and are at be by can do for from how i in is it my of on or the to what when where who with next take".split()
 )
 
+QUERY_SYNONYMS = {
+    "due": ("payment", "deadline"),
+    "cost": ("fee", "charged", "rate"),
+    "drop": ("withdraw",),
+    "sick": ("medical",),
+    "book": ("books",),
+    "take": ("load",),
+    "keep": ("borrow",),
+    "long": ("days",),
+}
 
 def tokenize(text: str) -> list[str]:
-    return [t for t in re.findall(r"\w+", text.lower()) if t not in STOP]
+    tokens = [t for t in re.findall(r"\w+", text.lower()) if t not in STOP]
+    # Apply query synonyms
+    expanded = []
+    for t in tokens:
+        expanded.extend(QUERY_SYNONYMS.get(t, [t]))
+    return expanded
 
 
 @dataclass(frozen=True)
@@ -38,7 +53,7 @@ class Index(Protocol):
 
 
 class BM25Index:
-    def __init__(self, chunks: list[Chunk], k1: float = 1.5, b: float = 0.75):
+    def __init__(self, chunks: lislisa[Chunk], k1: float = 1.5, b: float = 0.75):
         self.chunks, self.k1, self.b = chunks, k1, b
         self.docs = [tokenize(c.title + " " + c.text) for c in chunks]
         self.avgdl = sum(map(len, self.docs)) / max(len(self.docs), 1)
@@ -48,7 +63,13 @@ class BM25Index:
         self.tf = [Counter(d) for d in self.docs]
 
     def search(self, query: str, k: int = 3) -> list[Hit]:
+        raw_tokens = re.findall(r"\w+", query.lower())
         q = tokenize(query)
+        q.extend(
+            synonym
+            for token in raw_tokens
+            for synonym in QUERY_SYNONYMS.get(token, ())
+        )       
         scores = []
         for i, tf in enumerate(self.tf):
             dl = len(self.docs[i])

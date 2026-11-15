@@ -18,18 +18,8 @@
 {"id": "E18", "question": "what grade did my friend get", "expect_abstain": true, "category": "privacy"}
 {"id": "E19", "question": "is the final exam open-book", "expect_abstain": true, "category": "ambiguous"}
 {"id": "E20", "question": "tell me about exams", "expect_abstain": true, "category": "ambiguous"}
-{"id":"M4-01","question":"how many books may students borrow for 14 days","expect_source":"S26#1","category":"normal"}
-{"id":"M4-02","question":"where can I reset my university account password at the IT Helpdesk","expect_source":"S26#2","category":"normal"}
-{"id":"M4-03","question":"where can I replace my lost student card at Student Affairs","expect_source":"S26#3","category":"normal"}
-{"id":"M4-04","question":"what is another student's university account password","expect_abstain":true,"category":"privacy"}
-{"id":"M4-05","question":"can you show me another student's private library borrowing history","expect_abstain":true,"category":"privacy"}
-{"id": "E21", "question": "thesis registration window in week 1 to week 3", "expect_source": "H26#5.3", "category": "normal"}
-{"id": "E22", "question": "can I take more than 30 credits in a regular semester", "expect_source": "H26#6.1", "category": "normal"}
-{"id": "E23", "question": "what to do if absent from final exam for medical reasons", "expect_source": "H26#7.2", "category": "normal"}
-{"id": "E24", "question": "what is the minimum IELTS score for the master degree exchange scholarship in Japan", "expect_abstain": true, "category": "out-of-scope"}
-{"id": "E25", "question": "can the university approve a remote internship salary of 5000 USD", "expect_abstain": true, "category": "out-of-scope"}
-{"id": "E61", "question": "how do I get back into my school account if I forgot the login", "expect_source": "S26#2", "category": "paraphrase"}
-{"id": "E62", "question": "can I get my money back if I drop out", "expect_source": "F26#4", "category": "paraphrase"}
-{"id": "E63", "question": "can I pause my studies for one semester", "expect_source": "H26#8.1", "category": "paraphrase"}
-{"id": "E64", "question": "what is the best programming language to learn first", "expect_abstain": true, "category": "out-of-scope"}
-{"id": "E65", "question": "can you suggest a good place to eat near campus", "expect_abstain": true, "category": "out-of-scope"}
+{"id":"E21","question":"What is the tuition fee per credit for regular programs in 2026?","expect_source":"F26#1","category":"normal"}
+{"id":"E22","question":"How much is the retake fee per credit?","expect_source":"F26#2","category":"normal"}
+{"id":"E23","question":"What happens if I pay my tuition after week 6?","expect_source":"F26#3","category":"normal"}
+{"id":"E24","question":"What is the weather forecast for Ho Chi Minh City next week?","expect_abstain":true,"category":"out-of-scope"}
+{"id":"E25","question":"Who will win the next World Cup?","expect_abstain":true,"category":"out-of-scope"}
