@@ -27,7 +27,7 @@ if "rated" not in st.session_state:
     st.session_state.rated = set()
 
 st.title("🎓 FIT Study Assistant")
-st.caption("Your AI-powered study assistant for university fees, " "offices, and student handbook questions.")
+st.caption("Your AI-powered study assistant for university fees, offices, and student handbook questions.")
 if not client.healthy():
     st.error("The assistant backend is not reachable. Start it with: uvicorn assistant_api.main:create_app --factory")
 

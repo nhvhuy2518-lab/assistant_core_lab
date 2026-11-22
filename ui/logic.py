@@ -25,47 +25,44 @@ def validate_input(text: str) -> str | None:
 
 
 def format_sources(sources):
-    """Convert retrieved sources into display-friendly dictionaries."""
-
-    formatted = []
+    """Format retrieved sources for display in the chat UI."""
 
     if not sources:
-        return formatted
+        return ""
 
+    formatted = []
     for source in sources:
         if isinstance(source, dict):
-            item = {
-                "title": source.get("title", "Unknown source"),
-                "content": source.get("content", ""),
-                "score": source.get("score"),
-            }
+            source_id = source.get("id", "")
+            title = source.get("title", "")
         else:
-            item = {
-                "title": getattr(source, "title", "Unknown source"),
-                "content": getattr(source, "content", ""),
-                "score": getattr(source, "score", None),
-            }
+            source_id = getattr(source, "id", "")
+            title = getattr(source, "title", "")
 
-        formatted.append(item)
+        source_id = str(source_id).strip()
+        title = str(title).strip()
+        if source_id and title:
+            formatted.append(f"{source_id} — {title}")
+        elif title:
+            formatted.append(title)
+        elif source_id:
+            formatted.append(source_id)
 
-    return formatted
+    if not formatted:
+        return ""
+    return "Sources: " + "; ".join(formatted)
 
 
 def status_note(result):
     """Return a user-friendly note describing the response status."""
 
-    status = getattr(result, "status", None)
+    if not result.ok:
+        return result.error or "The request could not be completed."
 
-    if status == "success":
-        return "Response generated successfully."
+    notes = []
+    if result.degraded:
+        notes.append("The response was generated using fallback information.")
+    if result.escalate:
+        notes.append("Please verify this information with the Training Office.")
 
-    if status == "fallback":
-        return "The response was generated using fallback information."
-
-    if status == "error":
-        return "The request could not be completed."
-
-    if status is None:
-        return "Response received."
-
-    return f"Response status: {status}"
+    return " ".join(notes) if notes else None
