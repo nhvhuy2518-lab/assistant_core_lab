@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from ui.api_client import ChatResult
+
 WELCOME = (
     "Hi! I can answer questions about fees, offices and the student handbook. "
     "Try: “Can I register my thesis with 118 credits?”"
@@ -24,45 +26,17 @@ def validate_input(text: str) -> str | None:
     return None
 
 
-def format_sources(sources):
-    """Format retrieved sources for display in the chat UI."""
-
+def format_sources(sources: list[dict]) -> str:
+    """Return 'Sources: H26#5.3 — 5.3 Thesis registration' or '' if none."""
     if not sources:
         return ""
-
-    formatted = []
-    for source in sources:
-        if isinstance(source, dict):
-            source_id = source.get("id", "")
-            title = source.get("title", "")
-        else:
-            source_id = getattr(source, "id", "")
-            title = getattr(source, "title", "")
-
-        source_id = str(source_id).strip()
-        title = str(title).strip()
-        if source_id and title:
-            formatted.append(f"{source_id} — {title}")
-        elif title:
-            formatted.append(title)
-        elif source_id:
-            formatted.append(source_id)
-
-    if not formatted:
-        return ""
-    return "Sources: " + "; ".join(formatted)
+    return "Sources: " + "; ".join(f"{s['id']} — {s['title']}" for s in sources)
 
 
-def status_note(result):
-    """Return a user-friendly note describing the response status."""
-
-    if not result.ok:
-        return result.error or "The request could not be completed."
-
-    notes = []
-    if result.degraded:
-        notes.append("The response was generated using fallback information.")
+def status_note(result: ChatResult) -> str | None:
+    """A short note shown under the answer, explaining special situations."""
     if result.escalate:
-        notes.append("Please verify this information with the Training Office.")
-
-    return " ".join(notes) if notes else None
+        return "I could not find this in the official documents. A staff member can help: Training Office, room I.101."
+    if result.degraded:
+        return "Shown directly from the source document (the AI helper was unavailable)."
+    return None

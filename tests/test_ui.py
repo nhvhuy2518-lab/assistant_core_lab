@@ -54,3 +54,19 @@ def test_format_sources():
 def test_status_note():
     assert "Training Office" in status_note(ChatResult(ok=True, escalate=True))
     assert status_note(ChatResult(ok=True)) is None
+
+
+def test_format_sources_multiple():
+    sources = [
+        {"id": "H26#5.3", "title": "5.3 Thesis registration"},
+        {"id": "S26#1", "title": "1 Library borrowing"},
+    ]
+    assert format_sources(sources) == "Sources: H26#5.3 — 5.3 Thesis registration; S26#1 — 1 Library borrowing"
+
+
+def test_status_note_degraded_and_fallback():
+    assert (
+        status_note(ChatResult(ok=True, degraded=True))
+        == "Shown directly from the source document (the AI helper was unavailable)."
+    )
+    assert status_note(ChatResult(ok=True, escalate=False, degraded=False)) is None
