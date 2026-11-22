@@ -2,6 +2,7 @@
 
 The UI never imports assistant_core: it only talks to the backend through the HTTP API.
 """
+
 import os
 import sys
 import uuid
@@ -9,7 +10,7 @@ from pathlib import Path
 
 import streamlit as st
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # so "import ui..." works under streamlit
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # so "import ui..." works under streamlit
 
 from ui.api_client import AssistantClient
 from ui.logic import EXAMPLES, WELCOME, format_sources, status_note, validate_input
@@ -26,10 +27,7 @@ if "rated" not in st.session_state:
     st.session_state.rated = set()
 
 st.title("🎓 FIT Study Assistant")
-st.caption(
-    "Your AI-powered study assistant for university fees, "
-    "offices, and student handbook questions."
-)
+st.caption("Your AI-powered study assistant for university fees, " "offices, and student handbook questions.")
 if not client.healthy():
     st.error("The assistant backend is not reachable. Start it with: uvicorn assistant_api.main:create_app --factory")
 
@@ -45,8 +43,8 @@ for i, m in enumerate(st.session_state.messages):
     with st.chat_message(m["role"]):
         st.markdown(m["content"])
         if m.get("sources"):
-           with st.expander("📚 View sources", expanded=False):
-             st.markdown(m["sources"])
+            with st.expander("📚 View sources", expanded=False):
+                st.markdown(m["sources"])
         if m.get("note"):
             st.info(m["note"])
         rid = m.get("request_id")
@@ -75,9 +73,15 @@ if question:
             st.write("DEBUG SOURCES:", result.sources)
             st.write("DEBUG SOURCES:", result.sources)
         if result.ok:
-            st.session_state.messages.append({"role": "assistant", "content": result.answer,
-                                              "sources": format_sources(result.sources),
-                                              "note": status_note(result), "request_id": result.request_id})
+            st.session_state.messages.append(
+                {
+                    "role": "assistant",
+                    "content": result.answer,
+                    "sources": format_sources(result.sources),
+                    "note": status_note(result),
+                    "request_id": result.request_id,
+                }
+            )
         else:
             st.session_state.messages.append({"role": "assistant", "content": f"⚠️ {result.error}"})
         st.rerun()
