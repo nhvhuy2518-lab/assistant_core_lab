@@ -1,4 +1,3 @@
-
 """Lab 7 warm-up: a web page in pure Python with Streamlit.
 
 Run:   streamlit run hello_streamlit.py      (a browser tab opens at http://localhost:8501)
