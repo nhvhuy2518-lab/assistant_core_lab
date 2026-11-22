@@ -2,6 +2,7 @@
 
 The UI never imports assistant_core: it only talks to the backend through the HTTP API.
 """
+
 import os
 import sys
 import uuid
@@ -9,7 +10,7 @@ from pathlib import Path
 
 import streamlit as st
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # so "import ui..." works under streamlit
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # so "import ui..." works under streamlit
 
 from ui.api_client import AssistantClient
 from ui.logic import EXAMPLES, WELCOME, format_sources, status_note, validate_input
@@ -26,6 +27,7 @@ if "rated" not in st.session_state:
     st.session_state.rated = set()
 
 st.title("🎓 FIT Study Assistant")
+st.caption("Your AI-powered study assistant for university fees, offices, and student handbook questions.")
 if not client.healthy():
     st.error("The assistant backend is not reachable. Start it with: uvicorn assistant_api.main:create_app --factory")
 
@@ -41,7 +43,8 @@ for i, m in enumerate(st.session_state.messages):
     with st.chat_message(m["role"]):
         st.markdown(m["content"])
         if m.get("sources"):
-            st.caption(m["sources"])
+            with st.expander("📚 View sources", expanded=False):
+                st.markdown(m["sources"])
         if m.get("note"):
             st.info(m["note"])
         rid = m.get("request_id")
@@ -51,8 +54,10 @@ for i, m in enumerate(st.session_state.messages):
                 client.send_feedback(rid, 1)
                 st.session_state.rated.add(rid)
                 st.toast("Thanks for your feedback!")
-            # TODO F1 (4 lines): add a 👎 button in c2 with key=f"down{i}" that sends rating -1,
-            #   remembers rid in st.session_state.rated and shows st.toast("Thanks — we will look at this answer.")
+            if c2.button("👎", key=f"down{i}"):
+                client.send_feedback(rid, -1)
+                st.session_state.rated.add(rid)
+                st.toast("Thanks — we will look at this answer.")
 
 # ---- new question ----------------------------------------------------------------
 question = st.chat_input("Ask about fees, offices or the handbook…") or st.session_state.pop("pending", None)
@@ -64,10 +69,19 @@ if question:
         st.session_state.messages.append({"role": "user", "content": question})
         with st.spinner("Thinking…"):
             result = client.ask(question, st.session_state.session_id)
+            st.write("DEBUG RESULT:", result)
+            st.write("DEBUG SOURCES:", result.sources)
+            st.write("DEBUG SOURCES:", result.sources)
         if result.ok:
-            st.session_state.messages.append({"role": "assistant", "content": result.answer,
-                                              "sources": format_sources(result.sources),
-                                              "note": status_note(result), "request_id": result.request_id})
+            st.session_state.messages.append(
+                {
+                    "role": "assistant",
+                    "content": result.answer,
+                    "sources": format_sources(result.sources),
+                    "note": status_note(result),
+                    "request_id": result.request_id,
+                }
+            )
         else:
             st.session_state.messages.append({"role": "assistant", "content": f"⚠️ {result.error}"})
         st.rerun()
