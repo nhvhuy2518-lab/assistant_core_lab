@@ -1,4 +1,3 @@
-
 """Streamlit chat UI. Run: streamlit run ui/app.py
 (the API must be running on port 8000).
 
@@ -32,18 +31,14 @@ st.set_page_config(
     page_icon="🎓",
 )
 
-client = AssistantClient(
-    os.getenv("ASSISTANT_API_URL", "http://127.0.0.1:8000")
-)
+client = AssistantClient(os.getenv("ASSISTANT_API_URL", "http://127.0.0.1:8000"))
 
 # ---- session state: remembered between reruns of this script ----------------
 if "session_id" not in st.session_state:
     st.session_state.session_id = uuid.uuid4().hex[:12]
 
 if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "assistant", "content": WELCOME}
-    ]
+    st.session_state.messages = [{"role": "assistant", "content": WELCOME}]
 
 if "rated" not in st.session_state:
     st.session_state.rated = set()
@@ -51,15 +46,11 @@ if "rated" not in st.session_state:
 # ---- page header -------------------------------------------------------------
 st.title("🎓 FIT Study Assistant")
 
-st.caption(
-    "Your AI-powered study assistant for university fees, "
-    "offices, and student handbook questions."
-)
+st.caption("Your AI-powered study assistant for university fees, " "offices, and student handbook questions.")
 
 if not client.healthy():
     st.error(
-        "The assistant backend is not reachable. "
-        "Start it with: uvicorn assistant_api.main:create_app --factory"
+        "The assistant backend is not reachable. " "Start it with: uvicorn assistant_api.main:create_app --factory"
     )
 
 # ---- sidebar -----------------------------------------------------------------
@@ -70,10 +61,7 @@ with st.sidebar:
         if st.button(ex, use_container_width=True):
             st.session_state.pending = ex
 
-    st.caption(
-        "This is an AI assistant. "
-        "Check important decisions with the Training Office."
-    )
+    st.caption("This is an AI assistant. " "Check important decisions with the Training Office.")
 
 # ---- conversation history ----------------------------------------------------
 for i, m in enumerate(st.session_state.messages):
@@ -114,10 +102,7 @@ for i, m in enumerate(st.session_state.messages):
                 st.toast("Thanks — we will look at this answer.")
 
 # ---- new question ------------------------------------------------------------
-question = (
-    st.chat_input("Ask about fees, offices or the handbook…")
-    or st.session_state.pop("pending", None)
-)
+question = st.chat_input("Ask about fees, offices or the handbook…") or st.session_state.pop("pending", None)
 
 if question:
     problem = validate_input(question)
@@ -126,9 +111,7 @@ if question:
         st.warning(problem)
 
     else:
-        st.session_state.messages.append(
-            {"role": "user", "content": question}
-        )
+        st.session_state.messages.append({"role": "user", "content": question})
 
         with st.spinner("Thinking…"):
             result = client.ask(
